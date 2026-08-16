@@ -46,7 +46,9 @@ dependencies {
 
 test {
     useJUnitPlatform()
-    systemProperty 'selenide.headless', System.getProperty('selenide.headless', 'false')
+    systemProperty 'selenide.headless', System.getProperty('selenide.headless', 'true')
     systemProperty 'selenide.browser', System.getProperty('selenide.browser', 'chrome')
-    systemProperty 'chromeoptions.args', '--no-sandbox,--disable-dev-shm-usage,--disable-gpu,--remote-allow-origins=*'
+
+    systemProperty 'webdriver.chrome.driver', ''
+    systemProperty 'chromeoptions.args', '--no-sandbox,--disable-dev-shm-usage,--disable-gpu,--headless=new,--remote-allow-origins=*'
 }
