@@ -24,7 +24,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Start SUT
-        run: java -jar ./artifacts/aqa-shop.jar &
+        run: java -jar ./artifacts/aqa-shop.jar & | sleep 15
 
       - name: Build with Gradle
         run: ./gradlew test --info -Dselenide.headless=true
