@@ -49,6 +49,5 @@ test {
     systemProperty 'selenide.headless', System.getProperty('selenide.headless', 'true')
     systemProperty 'selenide.browser', System.getProperty('selenide.browser', 'chrome')
 
-    systemProperty 'webdriver.chrome.driver', ''
     systemProperty 'chromeoptions.args', '--no-sandbox,--disable-dev-shm-usage,--disable-gpu,--headless=new,--remote-allow-origins=*'
 }
