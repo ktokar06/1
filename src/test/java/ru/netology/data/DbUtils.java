@@ -7,14 +7,6 @@ public class DbUtils {
     private static final String DB_USER = "app";
     private static final String DB_PASSWORD = "pass";
 
-    static {
-        try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Драйвер PostgreSQL не найден", e);
-        }
-    }
-
     public static String getPaymentStatus(String paymentId) {
         String query = "SELECT status FROM payment_entity WHERE id = ?";
         return executeQuery(query, paymentId, "status");
@@ -25,30 +17,14 @@ public class DbUtils {
         return executeQuery(query, creditId, "status");
     }
 
-    public static String getLastTransactionId() {
-        String queryPayment = "SELECT id FROM payment_entity ORDER BY created DESC LIMIT 1";
-        try (Connection conn = getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(queryPayment)) {
-            if (rs.next()) {
-                return rs.getString("id");
-            }
-        } catch (SQLException e) {
-            System.out.println("Ошибка при получении payment_id: " + e.getMessage());
-        }
+    public static String getLastPaymentId() {
+        String query = "SELECT id FROM payment_entity ORDER BY created DESC LIMIT 1";
+        return executeQuerySingleColumn(query, "id");
+    }
 
-        String queryCredit = "SELECT id FROM credit_request_entity ORDER BY created DESC LIMIT 1";
-        try (Connection conn = getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(queryCredit)) {
-            if (rs.next()) {
-                return rs.getString("id");
-            }
-        } catch (SQLException e) {
-            System.out.println("Ошибка при получении credit_id: " + e.getMessage());
-        }
-
-        return null;
+    public static String getLastCreditId() {
+        String query = "SELECT id FROM credit_request_entity ORDER BY created DESC LIMIT 1";
+        return executeQuerySingleColumn(query, "id");
     }
 
     public static void clearDatabase() {
@@ -58,7 +34,7 @@ public class DbUtils {
             stmt.executeUpdate("DELETE FROM credit_request_entity");
             stmt.executeUpdate("DELETE FROM order_entity");
         } catch (SQLException e) {
-            System.out.println("Ошибка при очистке базы данных: " + e.getMessage());
+            throw new RuntimeException("Ошибка при очистке базы данных", e);
         }
     }
 
@@ -75,7 +51,20 @@ public class DbUtils {
                 return rs.getString(column);
             }
         } catch (SQLException e) {
-            System.out.println("Ошибка при выполнении запроса: " + e.getMessage());
+            throw new RuntimeException("Ошибка при выполнении запроса", e);
+        }
+        return null;
+    }
+
+    private static String executeQuerySingleColumn(String query, String column) {
+        try (Connection conn = getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            if (rs.next()) {
+                return rs.getString(column);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Ошибка при выполнении запроса", e);
         }
         return null;
     }

@@ -47,10 +47,4 @@ java -jar artifacts/aqa-shop.jar
 ./gradlew allureServe
 ```
 
-<img width="2548" height="1342" alt="image" src="https://github.com/user-attachments/assets/910563bf-f586-479c-91a4-85dab48b4988" />
-
-<img width="2548" height="1342" alt="image" src="https://github.com/user-attachments/assets/79373685-67e4-4706-baa8-6cbcd8d4cdbc" />
-
-<img width="2548" height="1342" alt="image" src="https://github.com/user-attachments/assets/a57bf848-d6f9-474e-913c-e59d6a00a730" />
-
 [![Java CI with Gradle](https://github.com/ktokar06/1/actions/workflows/gradle.yml/badge.svg)](https://github.com/ktokar06/1/actions/workflows/gradle.yml)
