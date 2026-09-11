@@ -5,6 +5,8 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import ru.netology.data.CardInfo;
 
+import java.time.Duration;
+
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
@@ -19,7 +21,7 @@ public class CreditPage {
             .first();
     private final SelenideElement successNotification = $(".notification_status_ok");
 
-    @Step("Заполнение формы кредита: номер={cardInfo.number}, месяц={cardInfo.month}, год={cardInfo.year}, держатель={cardInfo.holder}")
+    @Step("Заполнение формы кредита")
     public void fillForm(CardInfo cardInfo) {
         cardNumberField.setValue(cardInfo.getNumber());
         monthField.setValue(cardInfo.getMonth());
@@ -31,7 +33,27 @@ public class CreditPage {
 
     @Step("Проверка успешного уведомления о кредите")
     public void verifySuccessNotification() {
-        successNotification.shouldBe(Condition.visible)
-                .shouldHave(Condition.text("Успешно"));
+        successNotification.shouldHave(Condition.text("Успешно"), Duration.ofSeconds(15));
+    }
+
+    @Step("Проверка сообщения о неверном формате")
+    public void verifyInvalidFormatMessage() {
+        $(".input__sub")
+                .shouldBe(Condition.visible, Duration.ofSeconds(15))
+                .shouldHave(Condition.text("Неверный формат"), Duration.ofSeconds(15));
+    }
+
+    @Step("Проверка сообщения о неверном сроке действия")
+    public void verifyInvalidDateMessage() {
+        $(".input__sub")
+                .shouldBe(Condition.visible, Duration.ofSeconds(15))
+                .shouldHave(Condition.text("Неверно указан срок действия карты"), Duration.ofSeconds(15));
+    }
+
+    @Step("Проверка сообщения об истёкшем сроке действия")
+    public void verifyExpiredDateMessage() {
+        $(".input__sub")
+                .shouldBe(Condition.visible, Duration.ofSeconds(15))
+                .shouldHave(Condition.text("Истёк срок действия карты"), Duration.ofSeconds(15));
     }
 }
