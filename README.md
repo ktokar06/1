@@ -48,3 +48,7 @@ java -jar artifacts/aqa-shop.jar
 ```
 
 [![Java CI with Gradle](https://github.com/ktokar06/1/actions/workflows/gradle.yml/badge.svg)](https://github.com/ktokar06/1/actions/workflows/gradle.yml)
+
+<img width="1911" height="926" alt="Screenshot From 2026-09-11 21-18-18" src="https://github.com/user-attachments/assets/d1be3872-0171-44c1-af66-49a9551695de" />
+
+<img width="1911" height="926" alt="image" src="https://github.com/user-attachments/assets/04c2145a-83d5-442e-bbc7-a1e76e6ce8e7" />
