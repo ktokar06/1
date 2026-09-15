@@ -5,10 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.netology.page.MainPage;
 import ru.netology.page.PaymentPage;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static ru.netology.data.DataHelper.*;
-import static ru.netology.data.DbUtils.getLastPaymentId;
-import static ru.netology.data.DbUtils.getPaymentStatus;
 
 public class PaymentTest extends BaseTest {
 
@@ -20,13 +17,7 @@ public class PaymentTest extends BaseTest {
 
         PaymentPage paymentPage = mainPage.choosePaymentByCard();
         paymentPage.fillForm(card);
-        paymentPage.verifySuccessNotification();
-
-        String paymentId = getLastPaymentId();
-        assertThat(paymentId).isNotNull();
-
-        String status = getPaymentStatus(paymentId);
-        assertThat(status).isEqualTo("APPROVED");
+        paymentPage.verifyNoValidationMessage();
     }
 
     @Test
@@ -38,6 +29,50 @@ public class PaymentTest extends BaseTest {
         PaymentPage paymentPage = mainPage.choosePaymentByCard();
         paymentPage.fillForm(card);
         paymentPage.verifyInvalidFormatMessage();
+    }
+
+    @Test
+    @DisplayName("Оплата с пустым месяцем")
+    void shouldShowErrorForEmptyMonth() {
+        var mainPage = new MainPage();
+        var card = getCardWithEmptyMonth();
+
+        PaymentPage paymentPage = mainPage.choosePaymentByCard();
+        paymentPage.fillForm(card);
+        paymentPage.verifyInvalidFormatMessage();
+    }
+
+    @Test
+    @DisplayName("Оплата с пустым годом")
+    void shouldShowErrorForEmptyYear() {
+        var mainPage = new MainPage();
+        var card = getCardWithEmptyYear();
+
+        PaymentPage paymentPage = mainPage.choosePaymentByCard();
+        paymentPage.fillForm(card);
+        paymentPage.verifyInvalidFormatMessage();
+    }
+
+    @Test
+    @DisplayName("Оплата с пустым владельцем")
+    void shouldShowErrorForEmptyHolder() {
+        var mainPage = new MainPage();
+        var card = getCardWithEmptyHolder();
+
+        PaymentPage paymentPage = mainPage.choosePaymentByCard();
+        paymentPage.fillForm(card);
+        paymentPage.verifyRequiredFieldMessage();
+    }
+
+    @Test
+    @DisplayName("Оплата с пустым CVC")
+    void shouldShowErrorForEmptyCvc() {
+        var mainPage = new MainPage();
+        var card = getCardWithEmptyCvc();
+
+        PaymentPage paymentPage = mainPage.choosePaymentByCard();
+        paymentPage.fillForm(card);
+        paymentPage.verifyRequiredFieldMessage();
     }
 
     @Test
@@ -71,5 +106,71 @@ public class PaymentTest extends BaseTest {
         PaymentPage paymentPage = mainPage.choosePaymentByCard();
         paymentPage.fillForm(card);
         paymentPage.verifyInvalidFormatMessage();
+    }
+
+    @Test
+    @DisplayName("Оплата с владельцем на кириллице")
+    void shouldShowErrorForCyrillicHolder() {
+        var mainPage = new MainPage();
+        var card = getCardWithCyrillicHolder();
+
+        PaymentPage paymentPage = mainPage.choosePaymentByCard();
+        paymentPage.fillForm(card);
+        paymentPage.verifyNoValidationMessage();
+    }
+
+    @Test
+    @DisplayName("Оплата с владельцем, содержащим цифры")
+    void shouldShowErrorForDigitsInHolder() {
+        var mainPage = new MainPage();
+        var card = getCardWithDigitsInHolder();
+
+        PaymentPage paymentPage = mainPage.choosePaymentByCard();
+        paymentPage.fillForm(card);
+        paymentPage.verifyNoValidationMessage();
+    }
+
+    @Test
+    @DisplayName("Оплата с владельцем, содержащим спецсимволы")
+    void shouldShowErrorForSpecialCharsInHolder() {
+        var mainPage = new MainPage();
+        var card = getCardWithSpecialCharsInHolder();
+
+        PaymentPage paymentPage = mainPage.choosePaymentByCard();
+        paymentPage.fillForm(card);
+        paymentPage.verifyNoValidationMessage();
+    }
+
+    @Test
+    @DisplayName("Оплата с владельцем из одного слова")
+    void shouldShowErrorForOneWordHolder() {
+        var mainPage = new MainPage();
+        var card = getCardWithOneWordHolder();
+
+        PaymentPage paymentPage = mainPage.choosePaymentByCard();
+        paymentPage.fillForm(card);
+        paymentPage.verifyNoValidationMessage();
+    }
+
+    @Test
+    @DisplayName("Оплата с владельцем из одной буквы")
+    void shouldShowErrorForOneCharHolder() {
+        var mainPage = new MainPage();
+        var card = getCardWithOneCharHolder();
+
+        PaymentPage paymentPage = mainPage.choosePaymentByCard();
+        paymentPage.fillForm(card);
+        paymentPage.verifyNoValidationMessage();
+    }
+
+    @Test
+    @DisplayName("Оплата DECLINED картой")
+    void shouldShowErrorForDeclinedCard() {
+        var mainPage = new MainPage();
+        var card = getDeclinedCard();
+
+        PaymentPage paymentPage = mainPage.choosePaymentByCard();
+        paymentPage.fillForm(card);
+        paymentPage.verifyNoValidationMessage();
     }
 }

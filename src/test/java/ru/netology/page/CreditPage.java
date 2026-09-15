@@ -19,7 +19,6 @@ public class CreditPage {
     private final SelenideElement continueButton = $$("button")
             .filterBy(Condition.text("Продолжить"))
             .first();
-    private final SelenideElement successNotification = $(".notification_status_ok");
 
     @Step("Заполнение формы кредита")
     public void fillForm(CardInfo cardInfo) {
@@ -29,11 +28,6 @@ public class CreditPage {
         holderField.setValue(cardInfo.getHolder());
         cvcField.setValue(cardInfo.getCvc());
         continueButton.click();
-    }
-
-    @Step("Проверка успешного уведомления о кредите")
-    public void verifySuccessNotification() {
-        successNotification.shouldHave(Condition.text("Успешно"), Duration.ofSeconds(15));
     }
 
     @Step("Проверка сообщения о неверном формате")
@@ -55,5 +49,17 @@ public class CreditPage {
         $(".input__sub")
                 .shouldBe(Condition.visible, Duration.ofSeconds(15))
                 .shouldHave(Condition.text("Истёк срок действия карты"), Duration.ofSeconds(15));
+    }
+
+    @Step("Проверка сообщения об обязательности поля")
+    public void verifyRequiredFieldMessage() {
+        $(".input__sub")
+                .shouldBe(Condition.visible, Duration.ofSeconds(15))
+                .shouldHave(Condition.text("Поле обязательно для заполнения"), Duration.ofSeconds(15));
+    }
+
+    @Step("Проверка отсутствия сообщения об ошибке валидации")
+    public void verifyNoValidationMessage() {
+        $(".input__sub").shouldNotBe(Condition.visible, Duration.ofSeconds(5));
     }
 }

@@ -27,6 +27,14 @@ public class DbUtils {
         return executeQuerySingleColumn(query, "id");
     }
 
+    public static int countPaymentRequests() {
+        return countRows("payment_entity");
+    }
+
+    public static int countCreditRequests() {
+        return countRows("credit_request_entity");
+    }
+
     public static void clearDatabase() {
         try (Connection conn = getConnection();
              Statement stmt = conn.createStatement()) {
@@ -36,6 +44,20 @@ public class DbUtils {
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при очистке базы данных", e);
         }
+    }
+
+    private static int countRows(String table) {
+        String query = "SELECT COUNT(*) FROM " + table;
+        try (Connection conn = getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Ошибка при выполнении запроса", e);
+        }
+        return 0;
     }
 
     private static Connection getConnection() throws SQLException {

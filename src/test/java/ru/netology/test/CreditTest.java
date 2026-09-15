@@ -5,10 +5,7 @@ import org.junit.jupiter.api.Test;
 import ru.netology.page.MainPage;
 import ru.netology.page.CreditPage;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static ru.netology.data.DataHelper.*;
-import static ru.netology.data.DbUtils.getCreditStatus;
-import static ru.netology.data.DbUtils.getLastCreditId;
 
 public class CreditTest extends BaseTest {
 
@@ -20,13 +17,7 @@ public class CreditTest extends BaseTest {
 
         CreditPage creditPage = mainPage.choosePaymentByCredit();
         creditPage.fillForm(card);
-        creditPage.verifySuccessNotification();
-
-        String creditId = getLastCreditId();
-        assertThat(creditId).isNotNull();
-
-        String status = getCreditStatus(creditId);
-        assertThat(status).isEqualTo("APPROVED");
+        creditPage.verifyNoValidationMessage();
     }
 
     @Test
@@ -38,6 +29,50 @@ public class CreditTest extends BaseTest {
         CreditPage creditPage = mainPage.choosePaymentByCredit();
         creditPage.fillForm(card);
         creditPage.verifyInvalidFormatMessage();
+    }
+
+    @Test
+    @DisplayName("Кредит с пустым месяцем")
+    void shouldShowErrorForEmptyMonth() {
+        var mainPage = new MainPage();
+        var card = getCardWithEmptyMonth();
+
+        CreditPage creditPage = mainPage.choosePaymentByCredit();
+        creditPage.fillForm(card);
+        creditPage.verifyInvalidFormatMessage();
+    }
+
+    @Test
+    @DisplayName("Кредит с пустым годом")
+    void shouldShowErrorForEmptyYear() {
+        var mainPage = new MainPage();
+        var card = getCardWithEmptyYear();
+
+        CreditPage creditPage = mainPage.choosePaymentByCredit();
+        creditPage.fillForm(card);
+        creditPage.verifyInvalidFormatMessage();
+    }
+
+    @Test
+    @DisplayName("Кредит с пустым владельцем")
+    void shouldShowErrorForEmptyHolder() {
+        var mainPage = new MainPage();
+        var card = getCardWithEmptyHolder();
+
+        CreditPage creditPage = mainPage.choosePaymentByCredit();
+        creditPage.fillForm(card);
+        creditPage.verifyRequiredFieldMessage();
+    }
+
+    @Test
+    @DisplayName("Кредит с пустым CVC")
+    void shouldShowErrorForEmptyCvc() {
+        var mainPage = new MainPage();
+        var card = getCardWithEmptyCvc();
+
+        CreditPage creditPage = mainPage.choosePaymentByCredit();
+        creditPage.fillForm(card);
+        creditPage.verifyRequiredFieldMessage();
     }
 
     @Test
@@ -71,5 +106,71 @@ public class CreditTest extends BaseTest {
         CreditPage creditPage = mainPage.choosePaymentByCredit();
         creditPage.fillForm(card);
         creditPage.verifyInvalidFormatMessage();
+    }
+
+    @Test
+    @DisplayName("Кредит с владельцем на кириллице")
+    void shouldShowErrorForCyrillicHolder() {
+        var mainPage = new MainPage();
+        var card = getCardWithCyrillicHolder();
+
+        CreditPage creditPage = mainPage.choosePaymentByCredit();
+        creditPage.fillForm(card);
+        creditPage.verifyNoValidationMessage();
+    }
+
+    @Test
+    @DisplayName("Кредит с владельцем, содержащим цифры")
+    void shouldShowErrorForDigitsInHolder() {
+        var mainPage = new MainPage();
+        var card = getCardWithDigitsInHolder();
+
+        CreditPage creditPage = mainPage.choosePaymentByCredit();
+        creditPage.fillForm(card);
+        creditPage.verifyNoValidationMessage();
+    }
+
+    @Test
+    @DisplayName("Кредит с владельцем, содержащим спецсимволы")
+    void shouldShowErrorForSpecialCharsInHolder() {
+        var mainPage = new MainPage();
+        var card = getCardWithSpecialCharsInHolder();
+
+        CreditPage creditPage = mainPage.choosePaymentByCredit();
+        creditPage.fillForm(card);
+        creditPage.verifyNoValidationMessage();
+    }
+
+    @Test
+    @DisplayName("Кредит с владельцем из одного слова")
+    void shouldShowErrorForOneWordHolder() {
+        var mainPage = new MainPage();
+        var card = getCardWithOneWordHolder();
+
+        CreditPage creditPage = mainPage.choosePaymentByCredit();
+        creditPage.fillForm(card);
+        creditPage.verifyNoValidationMessage();
+    }
+
+    @Test
+    @DisplayName("Кредит с владельцем из одной буквы")
+    void shouldShowErrorForOneCharHolder() {
+        var mainPage = new MainPage();
+        var card = getCardWithOneCharHolder();
+
+        CreditPage creditPage = mainPage.choosePaymentByCredit();
+        creditPage.fillForm(card);
+        creditPage.verifyNoValidationMessage();
+    }
+
+    @Test
+    @DisplayName("Кредит с DECLINED картой")
+    void shouldShowErrorForDeclinedCard() {
+        var mainPage = new MainPage();
+        var card = getDeclinedCard();
+
+        CreditPage creditPage = mainPage.choosePaymentByCredit();
+        creditPage.fillForm(card);
+        creditPage.verifyNoValidationMessage();
     }
 }

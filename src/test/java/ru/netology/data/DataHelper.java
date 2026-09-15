@@ -9,10 +9,21 @@ import java.util.Locale;
 public class DataHelper {
     private static final Faker faker = new Faker(new Locale("en"));
     private static final String APPROVED_CARD = "1111222233334444";
+    private static final String DECLINED_CARD = "5555666677778888";
 
     public static CardInfo getApprovedCard() {
         return CardInfo.builder()
                 .number(APPROVED_CARD)
+                .month(getFutureMonth())
+                .year(getFutureYear())
+                .holder(getValidHolder())
+                .cvc("123")
+                .build();
+    }
+
+    public static CardInfo getDeclinedCard() {
+        return CardInfo.builder()
+                .number(DECLINED_CARD)
                 .month(getFutureMonth())
                 .year(getFutureYear())
                 .holder(getValidHolder())
@@ -27,6 +38,46 @@ public class DataHelper {
                 .year(getFutureYear())
                 .holder(getValidHolder())
                 .cvc("123")
+                .build();
+    }
+
+    public static CardInfo getCardWithEmptyMonth() {
+        return CardInfo.builder()
+                .number(APPROVED_CARD)
+                .month("")
+                .year(getFutureYear())
+                .holder(getValidHolder())
+                .cvc("123")
+                .build();
+    }
+
+    public static CardInfo getCardWithEmptyYear() {
+        return CardInfo.builder()
+                .number(APPROVED_CARD)
+                .month(getFutureMonth())
+                .year("")
+                .holder(getValidHolder())
+                .cvc("123")
+                .build();
+    }
+
+    public static CardInfo getCardWithEmptyHolder() {
+        return CardInfo.builder()
+                .number(APPROVED_CARD)
+                .month(getFutureMonth())
+                .year(getFutureYear())
+                .holder("")
+                .cvc("123")
+                .build();
+    }
+
+    public static CardInfo getCardWithEmptyCvc() {
+        return CardInfo.builder()
+                .number(APPROVED_CARD)
+                .month(getFutureMonth())
+                .year(getFutureYear())
+                .holder(getValidHolder())
+                .cvc("")
                 .build();
     }
 
@@ -57,6 +108,56 @@ public class DataHelper {
                 .year(getFutureYear())
                 .holder(getValidHolder())
                 .cvc("12")
+                .build();
+    }
+
+    public static CardInfo getCardWithCyrillicHolder() {
+        return CardInfo.builder()
+                .number(APPROVED_CARD)
+                .month(getFutureMonth())
+                .year(getFutureYear())
+                .holder("Иван Иванов")
+                .cvc("123")
+                .build();
+    }
+
+    public static CardInfo getCardWithDigitsInHolder() {
+        return CardInfo.builder()
+                .number(APPROVED_CARD)
+                .month(getFutureMonth())
+                .year(getFutureYear())
+                .holder("Ivan123 Ivanov")
+                .cvc("123")
+                .build();
+    }
+
+    public static CardInfo getCardWithSpecialCharsInHolder() {
+        return CardInfo.builder()
+                .number(APPROVED_CARD)
+                .month(getFutureMonth())
+                .year(getFutureYear())
+                .holder("Ivan@#$ Ivanov")
+                .cvc("123")
+                .build();
+    }
+
+    public static CardInfo getCardWithOneWordHolder() {
+        return CardInfo.builder()
+                .number(APPROVED_CARD)
+                .month(getFutureMonth())
+                .year(getFutureYear())
+                .holder("Ivan")
+                .cvc("123")
+                .build();
+    }
+
+    public static CardInfo getCardWithOneCharHolder() {
+        return CardInfo.builder()
+                .number(APPROVED_CARD)
+                .month(getFutureMonth())
+                .year(getFutureYear())
+                .holder("I")
+                .cvc("123")
                 .build();
     }
 
