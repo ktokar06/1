@@ -7,6 +7,7 @@ import ru.netology.data.CardInfo;
 
 import java.time.Duration;
 
+import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
@@ -17,7 +18,7 @@ public class CreditPage {
     private final SelenideElement holderField = $$("input").get(3);
     private final SelenideElement cvcField = $("input[placeholder='999']");
     private final SelenideElement continueButton = $$("button")
-            .filterBy(Condition.text("Продолжить"))
+            .filterBy(Condition.exactText("Продолжить"))
             .first();
 
     @Step("Заполнение формы кредита")
@@ -30,36 +31,23 @@ public class CreditPage {
         continueButton.click();
     }
 
-    @Step("Проверка сообщения о неверном формате")
-    public void verifyInvalidFormatMessage() {
+    @Step("Проверка сообщения об ошибке валидации: {0}")
+    public void verifyValidationMessage(String expectedText) {
         $(".input__sub")
-                .shouldBe(Condition.visible, Duration.ofSeconds(15))
-                .shouldHave(Condition.text("Неверный формат"), Duration.ofSeconds(15));
-    }
-
-    @Step("Проверка сообщения о неверном сроке действия")
-    public void verifyInvalidDateMessage() {
-        $(".input__sub")
-                .shouldBe(Condition.visible, Duration.ofSeconds(15))
-                .shouldHave(Condition.text("Неверно указан срок действия карты"), Duration.ofSeconds(15));
-    }
-
-    @Step("Проверка сообщения об истёкшем сроке действия")
-    public void verifyExpiredDateMessage() {
-        $(".input__sub")
-                .shouldBe(Condition.visible, Duration.ofSeconds(15))
-                .shouldHave(Condition.text("Истёк срок действия карты"), Duration.ofSeconds(15));
-    }
-
-    @Step("Проверка сообщения об обязательности поля")
-    public void verifyRequiredFieldMessage() {
-        $(".input__sub")
-                .shouldBe(Condition.visible, Duration.ofSeconds(15))
-                .shouldHave(Condition.text("Поле обязательно для заполнения"), Duration.ofSeconds(15));
+                .shouldBe(Condition.visible)
+                .shouldHave(Condition.text(expectedText));
     }
 
     @Step("Проверка отсутствия сообщения об ошибке валидации")
     public void verifyNoValidationMessage() {
-        $(".input__sub").shouldNotBe(Condition.visible, Duration.ofSeconds(5));
+        $$(".input__sub").filterBy(Condition.visible).shouldHave(size(0));
+    }
+
+    @Step("Проверка всплывающего сообщения: {0}")
+    public void verifyNotification(String expectedText) {
+        $$(".notification")
+                .findBy(Condition.visible)
+                .find(".notification__title")
+                .shouldHave(Condition.text(expectedText), Duration.ofSeconds(15));
     }
 }

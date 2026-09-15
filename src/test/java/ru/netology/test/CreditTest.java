@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 import ru.netology.page.MainPage;
 import ru.netology.page.CreditPage;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.netology.data.DataHelper.*;
+import static ru.netology.data.DbUtils.*;
 
 public class CreditTest extends BaseTest {
 
@@ -17,7 +19,11 @@ public class CreditTest extends BaseTest {
 
         CreditPage creditPage = mainPage.choosePaymentByCredit();
         creditPage.fillForm(card);
-        creditPage.verifyNoValidationMessage();
+        creditPage.verifyNotification("Успешно");
+
+        String creditId = getLastCreditId();
+        assertEquals("APPROVED", getCreditStatus(creditId));
+        assertEquals(1, countCreditRequests());
     }
 
     @Test
@@ -28,7 +34,7 @@ public class CreditTest extends BaseTest {
 
         CreditPage creditPage = mainPage.choosePaymentByCredit();
         creditPage.fillForm(card);
-        creditPage.verifyInvalidFormatMessage();
+        creditPage.verifyValidationMessage("Неверный формат");
     }
 
     @Test
@@ -39,7 +45,7 @@ public class CreditTest extends BaseTest {
 
         CreditPage creditPage = mainPage.choosePaymentByCredit();
         creditPage.fillForm(card);
-        creditPage.verifyInvalidFormatMessage();
+        creditPage.verifyValidationMessage("Неверный формат");
     }
 
     @Test
@@ -50,7 +56,7 @@ public class CreditTest extends BaseTest {
 
         CreditPage creditPage = mainPage.choosePaymentByCredit();
         creditPage.fillForm(card);
-        creditPage.verifyInvalidFormatMessage();
+        creditPage.verifyValidationMessage("Неверный формат");
     }
 
     @Test
@@ -61,7 +67,7 @@ public class CreditTest extends BaseTest {
 
         CreditPage creditPage = mainPage.choosePaymentByCredit();
         creditPage.fillForm(card);
-        creditPage.verifyRequiredFieldMessage();
+        creditPage.verifyValidationMessage("Поле обязательно для заполнения");
     }
 
     @Test
@@ -72,7 +78,7 @@ public class CreditTest extends BaseTest {
 
         CreditPage creditPage = mainPage.choosePaymentByCredit();
         creditPage.fillForm(card);
-        creditPage.verifyRequiredFieldMessage();
+        creditPage.verifyValidationMessage("Поле обязательно для заполнения");
     }
 
     @Test
@@ -83,7 +89,7 @@ public class CreditTest extends BaseTest {
 
         CreditPage creditPage = mainPage.choosePaymentByCredit();
         creditPage.fillForm(card);
-        creditPage.verifyInvalidDateMessage();
+        creditPage.verifyValidationMessage("Неверно указан срок действия карты");
     }
 
     @Test
@@ -94,7 +100,7 @@ public class CreditTest extends BaseTest {
 
         CreditPage creditPage = mainPage.choosePaymentByCredit();
         creditPage.fillForm(card);
-        creditPage.verifyExpiredDateMessage();
+        creditPage.verifyValidationMessage("Истёк срок действия карты");
     }
 
     @Test
@@ -105,12 +111,12 @@ public class CreditTest extends BaseTest {
 
         CreditPage creditPage = mainPage.choosePaymentByCredit();
         creditPage.fillForm(card);
-        creditPage.verifyInvalidFormatMessage();
+        creditPage.verifyValidationMessage("Неверный формат");
     }
 
     @Test
     @DisplayName("Кредит с владельцем на кириллице")
-    void shouldShowErrorForCyrillicHolder() {
+    void shouldAcceptCyrillicHolder() {
         var mainPage = new MainPage();
         var card = getCardWithCyrillicHolder();
 
@@ -121,7 +127,7 @@ public class CreditTest extends BaseTest {
 
     @Test
     @DisplayName("Кредит с владельцем, содержащим цифры")
-    void shouldShowErrorForDigitsInHolder() {
+    void shouldAcceptDigitsInHolder() {
         var mainPage = new MainPage();
         var card = getCardWithDigitsInHolder();
 
@@ -132,7 +138,7 @@ public class CreditTest extends BaseTest {
 
     @Test
     @DisplayName("Кредит с владельцем, содержащим спецсимволы")
-    void shouldShowErrorForSpecialCharsInHolder() {
+    void shouldAcceptSpecialCharsInHolder() {
         var mainPage = new MainPage();
         var card = getCardWithSpecialCharsInHolder();
 
@@ -143,7 +149,7 @@ public class CreditTest extends BaseTest {
 
     @Test
     @DisplayName("Кредит с владельцем из одного слова")
-    void shouldShowErrorForOneWordHolder() {
+    void shouldAcceptOneWordHolder() {
         var mainPage = new MainPage();
         var card = getCardWithOneWordHolder();
 
@@ -154,7 +160,7 @@ public class CreditTest extends BaseTest {
 
     @Test
     @DisplayName("Кредит с владельцем из одной буквы")
-    void shouldShowErrorForOneCharHolder() {
+    void shouldAcceptOneCharHolder() {
         var mainPage = new MainPage();
         var card = getCardWithOneCharHolder();
 

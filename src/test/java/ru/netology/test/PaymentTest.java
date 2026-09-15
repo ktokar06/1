@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 import ru.netology.page.MainPage;
 import ru.netology.page.PaymentPage;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ru.netology.data.DataHelper.*;
+import static ru.netology.data.DbUtils.*;
 
 public class PaymentTest extends BaseTest {
 
@@ -17,7 +19,11 @@ public class PaymentTest extends BaseTest {
 
         PaymentPage paymentPage = mainPage.choosePaymentByCard();
         paymentPage.fillForm(card);
-        paymentPage.verifyNoValidationMessage();
+        paymentPage.verifyNotification("Успешно");
+
+        String paymentId = getLastPaymentId();
+        assertEquals("APPROVED", getPaymentStatus(paymentId));
+        assertEquals(1, countPaymentRequests());
     }
 
     @Test
@@ -28,7 +34,7 @@ public class PaymentTest extends BaseTest {
 
         PaymentPage paymentPage = mainPage.choosePaymentByCard();
         paymentPage.fillForm(card);
-        paymentPage.verifyInvalidFormatMessage();
+        paymentPage.verifyValidationMessage("Неверный формат");
     }
 
     @Test
@@ -39,7 +45,7 @@ public class PaymentTest extends BaseTest {
 
         PaymentPage paymentPage = mainPage.choosePaymentByCard();
         paymentPage.fillForm(card);
-        paymentPage.verifyInvalidFormatMessage();
+        paymentPage.verifyValidationMessage("Неверный формат");
     }
 
     @Test
@@ -50,7 +56,7 @@ public class PaymentTest extends BaseTest {
 
         PaymentPage paymentPage = mainPage.choosePaymentByCard();
         paymentPage.fillForm(card);
-        paymentPage.verifyInvalidFormatMessage();
+        paymentPage.verifyValidationMessage("Неверный формат");
     }
 
     @Test
@@ -61,7 +67,7 @@ public class PaymentTest extends BaseTest {
 
         PaymentPage paymentPage = mainPage.choosePaymentByCard();
         paymentPage.fillForm(card);
-        paymentPage.verifyRequiredFieldMessage();
+        paymentPage.verifyValidationMessage("Поле обязательно для заполнения");
     }
 
     @Test
@@ -72,7 +78,7 @@ public class PaymentTest extends BaseTest {
 
         PaymentPage paymentPage = mainPage.choosePaymentByCard();
         paymentPage.fillForm(card);
-        paymentPage.verifyRequiredFieldMessage();
+        paymentPage.verifyValidationMessage("Поле обязательно для заполнения");
     }
 
     @Test
@@ -83,7 +89,7 @@ public class PaymentTest extends BaseTest {
 
         PaymentPage paymentPage = mainPage.choosePaymentByCard();
         paymentPage.fillForm(card);
-        paymentPage.verifyInvalidDateMessage();
+        paymentPage.verifyValidationMessage("Неверно указан срок действия карты");
     }
 
     @Test
@@ -94,7 +100,7 @@ public class PaymentTest extends BaseTest {
 
         PaymentPage paymentPage = mainPage.choosePaymentByCard();
         paymentPage.fillForm(card);
-        paymentPage.verifyExpiredDateMessage();
+        paymentPage.verifyValidationMessage("Истёк срок действия карты");
     }
 
     @Test
@@ -105,12 +111,12 @@ public class PaymentTest extends BaseTest {
 
         PaymentPage paymentPage = mainPage.choosePaymentByCard();
         paymentPage.fillForm(card);
-        paymentPage.verifyInvalidFormatMessage();
+        paymentPage.verifyValidationMessage("Неверный формат");
     }
 
     @Test
     @DisplayName("Оплата с владельцем на кириллице")
-    void shouldShowErrorForCyrillicHolder() {
+    void shouldAcceptCyrillicHolder() {
         var mainPage = new MainPage();
         var card = getCardWithCyrillicHolder();
 
@@ -121,7 +127,7 @@ public class PaymentTest extends BaseTest {
 
     @Test
     @DisplayName("Оплата с владельцем, содержащим цифры")
-    void shouldShowErrorForDigitsInHolder() {
+    void shouldAcceptDigitsInHolder() {
         var mainPage = new MainPage();
         var card = getCardWithDigitsInHolder();
 
@@ -132,7 +138,7 @@ public class PaymentTest extends BaseTest {
 
     @Test
     @DisplayName("Оплата с владельцем, содержащим спецсимволы")
-    void shouldShowErrorForSpecialCharsInHolder() {
+    void shouldAcceptSpecialCharsInHolder() {
         var mainPage = new MainPage();
         var card = getCardWithSpecialCharsInHolder();
 
@@ -143,7 +149,7 @@ public class PaymentTest extends BaseTest {
 
     @Test
     @DisplayName("Оплата с владельцем из одного слова")
-    void shouldShowErrorForOneWordHolder() {
+    void shouldAcceptOneWordHolder() {
         var mainPage = new MainPage();
         var card = getCardWithOneWordHolder();
 
@@ -154,7 +160,7 @@ public class PaymentTest extends BaseTest {
 
     @Test
     @DisplayName("Оплата с владельцем из одной буквы")
-    void shouldShowErrorForOneCharHolder() {
+    void shouldAcceptOneCharHolder() {
         var mainPage = new MainPage();
         var card = getCardWithOneCharHolder();
 
