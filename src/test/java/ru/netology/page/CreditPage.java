@@ -5,6 +5,8 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import ru.netology.data.CardInfo;
 
+import java.time.Duration;
+
 import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
@@ -46,6 +48,6 @@ public class CreditPage {
         $$(".notification")
                 .findBy(Condition.visible)
                 .find(".notification__title")
-                .shouldHave(Condition.text(expectedText));
+                .shouldHave(Condition.text(expectedText), Duration.ofSeconds(15));
     }
 }

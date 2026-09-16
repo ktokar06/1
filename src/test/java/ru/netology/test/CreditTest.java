@@ -115,58 +115,58 @@ public class CreditTest extends BaseTest {
     }
 
     @Test
-    @DisplayName("Кредит с владельцем на кириллице")
-    void shouldAcceptCyrillicHolder() {
+    @DisplayName("Кредит с владельцем на кириллице — ошибка валидации")
+    void shouldShowErrorForCyrillicHolder() {
         var mainPage = new MainPage();
         var card = getCardWithCyrillicHolder();
 
         CreditPage creditPage = mainPage.choosePaymentByCredit();
         creditPage.fillForm(card);
-        creditPage.verifyNoValidationMessage();
+        creditPage.verifyValidationMessage("Неверный формат");
     }
 
     @Test
-    @DisplayName("Кредит с владельцем, содержащим цифры")
-    void shouldAcceptDigitsInHolder() {
+    @DisplayName("Кредит с владельцем, содержащим цифры — ошибка валидации")
+    void shouldShowErrorForDigitsInHolder() {
         var mainPage = new MainPage();
         var card = getCardWithDigitsInHolder();
 
         CreditPage creditPage = mainPage.choosePaymentByCredit();
         creditPage.fillForm(card);
-        creditPage.verifyNoValidationMessage();
+        creditPage.verifyValidationMessage("Неверный формат");
     }
 
     @Test
-    @DisplayName("Кредит с владельцем, содержащим спецсимволы")
-    void shouldAcceptSpecialCharsInHolder() {
+    @DisplayName("Кредит с владельцем, содержащим спецсимволы — ошибка валидации")
+    void shouldShowErrorForSpecialCharsInHolder() {
         var mainPage = new MainPage();
         var card = getCardWithSpecialCharsInHolder();
 
         CreditPage creditPage = mainPage.choosePaymentByCredit();
         creditPage.fillForm(card);
-        creditPage.verifyNoValidationMessage();
+        creditPage.verifyValidationMessage("Неверный формат");
     }
 
     @Test
-    @DisplayName("Кредит с владельцем из одного слова")
-    void shouldAcceptOneWordHolder() {
+    @DisplayName("Кредит с владельцем из одного слова — ошибка валидации")
+    void shouldShowErrorForOneWordHolder() {
         var mainPage = new MainPage();
         var card = getCardWithOneWordHolder();
 
         CreditPage creditPage = mainPage.choosePaymentByCredit();
         creditPage.fillForm(card);
-        creditPage.verifyNoValidationMessage();
+        creditPage.verifyValidationMessage("Неверный формат");
     }
 
     @Test
-    @DisplayName("Кредит с владельцем из одной буквы")
-    void shouldAcceptOneCharHolder() {
+    @DisplayName("Кредит с владельцем из одной буквы — ошибка валидации")
+    void shouldShowErrorForOneCharHolder() {
         var mainPage = new MainPage();
         var card = getCardWithOneCharHolder();
 
         CreditPage creditPage = mainPage.choosePaymentByCredit();
         creditPage.fillForm(card);
-        creditPage.verifyNoValidationMessage();
+        creditPage.verifyValidationMessage("Неверный формат");
     }
 
     @Test
@@ -177,6 +177,11 @@ public class CreditTest extends BaseTest {
 
         CreditPage creditPage = mainPage.choosePaymentByCredit();
         creditPage.fillForm(card);
+        creditPage.verifyNotification("Ошибка");
         creditPage.verifyNoValidationMessage();
+
+        String creditId = getLastCreditId();
+        assertEquals("DECLINED", getCreditStatus(creditId));
+        assertEquals(1, countCreditRequests());
     }
 }

@@ -115,58 +115,58 @@ public class PaymentTest extends BaseTest {
     }
 
     @Test
-    @DisplayName("Оплата с владельцем на кириллице")
-    void shouldAcceptCyrillicHolder() {
+    @DisplayName("Оплата с владельцем на кириллице — ошибка валидации")
+    void shouldShowErrorForCyrillicHolder() {
         var mainPage = new MainPage();
         var card = getCardWithCyrillicHolder();
 
         PaymentPage paymentPage = mainPage.choosePaymentByCard();
         paymentPage.fillForm(card);
-        paymentPage.verifyNoValidationMessage();
+        paymentPage.verifyValidationMessage("Неверный формат");
     }
 
     @Test
-    @DisplayName("Оплата с владельцем, содержащим цифры")
-    void shouldAcceptDigitsInHolder() {
+    @DisplayName("Оплата с владельцем, содержащим цифры — ошибка валидации")
+    void shouldShowErrorForDigitsInHolder() {
         var mainPage = new MainPage();
         var card = getCardWithDigitsInHolder();
 
         PaymentPage paymentPage = mainPage.choosePaymentByCard();
         paymentPage.fillForm(card);
-        paymentPage.verifyNoValidationMessage();
+        paymentPage.verifyValidationMessage("Неверный формат");
     }
 
     @Test
-    @DisplayName("Оплата с владельцем, содержащим спецсимволы")
-    void shouldAcceptSpecialCharsInHolder() {
+    @DisplayName("Оплата с владельцем, содержащим спецсимволы — ошибка валидации")
+    void shouldShowErrorForSpecialCharsInHolder() {
         var mainPage = new MainPage();
         var card = getCardWithSpecialCharsInHolder();
 
         PaymentPage paymentPage = mainPage.choosePaymentByCard();
         paymentPage.fillForm(card);
-        paymentPage.verifyNoValidationMessage();
+        paymentPage.verifyValidationMessage("Неверный формат");
     }
 
     @Test
-    @DisplayName("Оплата с владельцем из одного слова")
-    void shouldAcceptOneWordHolder() {
+    @DisplayName("Оплата с владельцем из одного слова — ошибка валидации")
+    void shouldShowErrorForOneWordHolder() {
         var mainPage = new MainPage();
         var card = getCardWithOneWordHolder();
 
         PaymentPage paymentPage = mainPage.choosePaymentByCard();
         paymentPage.fillForm(card);
-        paymentPage.verifyNoValidationMessage();
+        paymentPage.verifyValidationMessage("Неверный формат");
     }
 
     @Test
-    @DisplayName("Оплата с владельцем из одной буквы")
-    void shouldAcceptOneCharHolder() {
+    @DisplayName("Оплата с владельцем из одной буквы — ошибка валидации")
+    void shouldShowErrorForOneCharHolder() {
         var mainPage = new MainPage();
         var card = getCardWithOneCharHolder();
 
         PaymentPage paymentPage = mainPage.choosePaymentByCard();
         paymentPage.fillForm(card);
-        paymentPage.verifyNoValidationMessage();
+        paymentPage.verifyValidationMessage("Неверный формат");
     }
 
     @Test
@@ -177,6 +177,11 @@ public class PaymentTest extends BaseTest {
 
         PaymentPage paymentPage = mainPage.choosePaymentByCard();
         paymentPage.fillForm(card);
+        paymentPage.verifyNotification("Ошибка");
         paymentPage.verifyNoValidationMessage();
+
+        String paymentId = getLastPaymentId();
+        assertEquals("DECLINED", getPaymentStatus(paymentId));
+        assertEquals(1, countPaymentRequests());
     }
 }
