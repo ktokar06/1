@@ -9,7 +9,7 @@ public abstract class BaseTest {
 
     @BeforeEach
     void setUp() {
-        open("http://localhost:8080");
         DbUtils.clearDatabase();
+        open("http://localhost:8080");
     }
 }
