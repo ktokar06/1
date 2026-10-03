@@ -49,7 +49,7 @@ java -jar artifacts/aqa-shop.jar
 
 [![Java CI with Gradle](https://github.com/ktokar06/1/actions/workflows/gradle.yml/badge.svg)](https://github.com/ktokar06/1/actions/workflows/gradle.yml)
 
-<img width="1920" height="940" alt="image" src="https://github.com/user-attachments/assets/36813953-e3e2-47da-9beb-7a1bd7585a5c" />
+<img width="1902" height="1010" alt="image" src="https://github.com/user-attachments/assets/8e480f48-2fe8-4168-a372-7af742994b51" />
 
-<img width="1920" height="940" alt="image" src="https://github.com/user-attachments/assets/43a8d56e-ebfa-4c39-838a-6f75e7110681" />
+<img width="1902" height="1010" alt="image" src="https://github.com/user-attachments/assets/6f4e590c-b217-4a0b-8a67-9e5fc1f04b64" />
 
